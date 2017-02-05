@@ -33,7 +33,7 @@ class MainHandler(webapp2.RequestHandler):
                     <td><label for="username">Username</label></td>
                     <td>
                         <input name="username" type="text" value="" required>
-                        <span style ='color:red'"""+name_error+"""</span>
+                        <span style ='color:red'>"""+name_error+"""</span>
                     </td>
                 </tr>
 
@@ -54,7 +54,7 @@ class MainHandler(webapp2.RequestHandler):
                 </tr>
 
                 <tr>
-                    <td><label for="email">Email (optional)</label></td>
+                   <td><label for="email">Email (optional)</label></td>
                     <td>
                         <input name="email" type="email" value="">
                     </td>
@@ -64,7 +64,22 @@ class MainHandler(webapp2.RequestHandler):
             <input type="submit">
         </form>
         """
+#        header="<h1>Signup</h1>"
 
+#        submit_form="""<form>
+#        <form action="/verify" method="post">
+#        <br>
+#        Username: <input name="username" type="text" value="" required>
+#        <br>
+#        Password: <input name="password" type="password" required>
+#        <br>
+#        Verify Password: <input name="verify_password" type="password" required>
+#        <br>
+#        Email(optional): <input name="email" type="email" value="">
+#        <br>
+#        <input type="submit">
+#        </form>
+#        """
         self.response.write(submit_form)
 
 class Validation(webapp2.RequestHandler):
@@ -74,13 +89,19 @@ class Validation(webapp2.RequestHandler):
             check_password=self.request.get("password")
             ver_password=self.request.get("verify_password")
 
+            if " " in username and check_password != ver_password:
+                name_error="Invalid username"
+                error="Passwords do not match"
+                self.redirect("/?name_error=Invalid Username"+"&error=Passwords do not match")
+
             if " " in username:
                 name_error="Invalid username"
-                self.redirect("/?error="+name_error)
+                self.redirect("/?name_error=Invalid Username")
 
             if check_password != ver_password:
                error="Passwords do not match"
-               self.redirect("/?error="+error)
+               self.redirect("/?error=Passwords do not match")
+
 
             self.response.write("<h1>Welcome "+username+"</h1>")
 
